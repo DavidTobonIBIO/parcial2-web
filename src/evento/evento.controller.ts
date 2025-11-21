@@ -2,6 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { EventoService } from './evento.service';
 import { CreateEventoDto } from './dto/create-evento.dto';
 import { UpdateEventoDto } from './dto/update-evento.dto';
+import { CreateAsistenteDto } from 'src/asistente/dto/create-asistente.dto';
+import { AsistenteEntity } from 'src/asistente/entities/asistente.entity';
+import { EventoEntity } from './entities/evento.entity';
 
 @Controller('evento')
 export class EventoController {
@@ -9,26 +12,27 @@ export class EventoController {
 
   @Post()
   create(@Body() createEventoDto: CreateEventoDto) {
-    return this.eventoService.create(createEventoDto);
+    return this.eventoService.crearEvento(createEventoDto);
   }
 
-  @Get()
-  findAll() {
-    return this.eventoService.findAll();
+  @Post("/aprobar/:id")
+  aprobarEvento(@Param('id') id: string) {
+    return this.eventoService.aprobarEvento(id);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.eventoService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventoDto: UpdateEventoDto) {
-    return this.eventoService.update(+id, updateEventoDto);
+    return this.eventoService.findEventoById(id);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.eventoService.remove(+id);
+    return this.eventoService.eliminarEvento(id);
   }
+
+  // @Post(':id/asistente')
+  // registrarAsistente(@Param('id') id: string, @Body() createAsistenteDto: CreateAsistenteDto){
+  //   return this.eventoService.registrarAsistente(id, createAsistenteDto)
+
+  // }
 }

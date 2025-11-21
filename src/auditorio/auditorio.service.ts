@@ -1,26 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAuditorioDto } from './dto/create-auditorio.dto';
-import { UpdateAuditorioDto } from './dto/update-auditorio.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AuditorioEntity } from './entities/auditorio.entity';
 
 @Injectable()
 export class AuditorioService {
-  create(createAuditorioDto: CreateAuditorioDto) {
-    return 'This action adds a new auditorio';
+  constructor(
+    @InjectRepository(AuditorioEntity)
+    private readonly auditorioRepository = Repository<AuditorioEntity>
+  ){}
+
+
+  crearAuditorio(createAuditorioDto: CreateAuditorioDto) {
+    if (createAuditorioDto.capacidad > 0) {
+      this.auditorioRepository.save(createAuditorioDto);
+    }
   }
 
-  findAll() {
-    return `This action returns all auditorio`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auditorio`;
-  }
-
-  update(id: number, updateAuditorioDto: UpdateAuditorioDto) {
-    return `This action updates a #${id} auditorio`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auditorio`;
-  }
 }

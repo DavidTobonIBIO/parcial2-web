@@ -1,26 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEventoDto } from './dto/create-evento.dto';
-import { UpdateEventoDto } from './dto/update-evento.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { EventoEntity } from './entities/evento.entity';
+import { Repository } from 'typeorm';
+import { CreateAsistenteDto } from 'src/asistente/dto/create-asistente.dto';
 
 @Injectable()
 export class EventoService {
-  create(createEventoDto: CreateEventoDto) {
+  constructor(
+    @InjectRepository(EventoEntity)
+    private readonly eventoRepository = Repository<EventoEntity>
+  ){}
+  
+  crearEvento(createEventoDto: CreateEventoDto) {
     return 'This action adds a new evento';
   }
 
-  findAll() {
-    return `This action returns all evento`;
+  aprobarEvento(id: string) {
+    const evento: EventoEntity | null = this.eventoRepository.findOne({where:{id}});
+    if (evento) {
+      if (evento.auditorio) {
+        evento.estado = "Aprobado"
+        this.eventoRepository.save(evento)
+      } else {
+        throw new ForbiddenException("No se puede aprobar un evento sin auditorio")
+      }
+    } else {
+      throw new NotFoundException("El evento no fue encontrado")
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} evento`;
+  eliminarEvento(id: string) {
+    const evento: EventoEntity | null = this.eventoRepository.findOne({where:{id}});
+    if (evento) {
+      if (evento.estado === "Aprobado") {
+        throw new ForbiddenException("El evento no se puede eliminar porque ya está aprobado");
+      }
+      this.eventoRepository.remove(evento);
+
+    } else {
+      throw new NotFoundException("El evento no fue encontrado");
+    }
   }
 
-  update(id: number, updateEventoDto: UpdateEventoDto) {
-    return `This action updates a #${id} evento`;
-  }
+  // agregarAsistente(id: string, asistente: CreateAsistenteDto) {
+  //   const evento: EventoEntity | null = this.eventoRepository.findOne({where:{id}});
+  //   if (evento) {
+  //     const email: string = createAsistenteDto.email;
+  //     for(let i = 0; i < evento.asistentes, i++) {
+  //       if (evento.asistentes[i].email === email) {
+  //         throw new ForbiddenException("No pueden haber dos asistentes con el mismo email")
+  //       }
+  //     }
 
-  remove(id: number) {
-    return `This action removes a #${id} evento`;
-  }
+  //     evento.asistentes.push(asistente)
+  //   }
+  // }
 }

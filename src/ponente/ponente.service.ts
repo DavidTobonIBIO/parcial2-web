@@ -1,39 +1,30 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreatePonenteDto } from './dto/create-ponente.dto';
-import { UpdatePonenteDto } from './dto/update-ponente.dto';
 import { PonenteEntity } from './entities/ponente.entity';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PonenteService {
   constructor(
-    @Injectable(PonenteEntity)
+    @InjectRepository(PonenteEntity)
     private readonly ponenteRepository = Repository<PonenteEntity>
   ){}
 
-  crearPonente(createPonenteDto: CreatePonenteDto) {
+  async crearPonente(createPonenteDto: CreatePonenteDto) {
     if (createPonenteDto.tipoPonente === "Interno" && createPonenteDto.email.substring(-4) === ".edu") {
-      const ponente: PonenteEntity = this.ponenteRepository.create(createPonenteDto);
-      return ponente;
+      await this.ponenteRepository.save(createPonenteDto);
     } else if (createPonenteDto.tipoPonente === "Invitado") {
-      const ponente: PonenteEntity = this.ponenteRepository.create(createPonenteDto);
-      return ponente;
+      this.ponenteRepository.save(createPonenteDto);
     }
-  }
-
-  findAll() {
-    return `This action returns all ponente`;
   }
 
   findPonenteById(id: string) {
     return this.ponenteRepository.findOne({where:{id}});
   }
 
-  update(id: number, updatePonenteDto: UpdatePonenteDto) {
-    return `This action updates a #${id} ponente`;
-  }
-
-  remove(id: number) {
+  eliminarPonente(id: string) {
     const ponente: PonenteEntity = this.ponenteRepository.finOne({where:{id}});
     if (ponente.eventos.length != 0) {
       throw new ForbiddenException("No se pueden eliminar ponentes con eventos asociados");
