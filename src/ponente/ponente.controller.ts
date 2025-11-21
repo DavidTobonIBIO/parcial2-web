@@ -9,7 +9,7 @@ export class PonenteController {
 
   @Post()
   create(@Body() createPonenteDto: CreatePonenteDto) {
-    return this.ponenteService.create(createPonenteDto);
+    return this.ponenteService.crearPonente(createPonenteDto);
   }
 
   @Get()
@@ -19,7 +19,7 @@ export class PonenteController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.ponenteService.findOne(+id);
+    return this.ponenteService.findPonenteById(id);
   }
 
   @Patch(':id')
