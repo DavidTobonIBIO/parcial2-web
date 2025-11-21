@@ -3,25 +3,26 @@ import { CreateEventoDto } from './dto/create-evento.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventoEntity } from './entities/evento.entity';
 import { Repository } from 'typeorm';
-import { CreateAsistenteDto } from 'src/asistente/dto/create-asistente.dto';
 
 @Injectable()
 export class EventoService {
   constructor(
     @InjectRepository(EventoEntity)
-    private readonly eventoRepository = Repository<EventoEntity>
+    private readonly eventoRepository: Repository<EventoEntity>
   ){}
   
-  crearEvento(createEventoDto: CreateEventoDto) {
-    return 'This action adds a new evento';
+  async crearEvento(createEventoDto: CreateEventoDto) {
+    if (createEventoDto.duracionHoras > 0) {
+      await this.eventoRepository.save(createEventoDto);
+    }
   }
 
-  aprobarEvento(id: string) {
-    const evento: EventoEntity | null = this.eventoRepository.findOne({where:{id}});
+  async aprobarEvento(id: string) {
+    const evento: EventoEntity | null = await this.eventoRepository.findOne({where:{id}});
     if (evento) {
       if (evento.auditorio) {
         evento.estado = "Aprobado"
-        this.eventoRepository.save(evento)
+        await this.eventoRepository.save(evento)
       } else {
         throw new ForbiddenException("No se puede aprobar un evento sin auditorio")
       }
@@ -30,19 +31,22 @@ export class EventoService {
     }
   }
 
-  eliminarEvento(id: string) {
-    const evento: EventoEntity | null = this.eventoRepository.findOne({where:{id}});
+  async eliminarEvento(id: string) {
+    const evento: EventoEntity | null = await this.eventoRepository.findOne({where:{id}});
     if (evento) {
       if (evento.estado === "Aprobado") {
         throw new ForbiddenException("El evento no se puede eliminar porque ya está aprobado");
       }
-      this.eventoRepository.remove(evento);
+      await this.eventoRepository.remove(evento);
 
     } else {
       throw new NotFoundException("El evento no fue encontrado");
     }
   }
 
+  async findEventoById(id: string) {
+    return await this.eventoRepository.findOne({where:{id}});
+  }
   // agregarAsistente(id: string, asistente: CreateAsistenteDto) {
   //   const evento: EventoEntity | null = this.eventoRepository.findOne({where:{id}});
   //   if (evento) {
@@ -55,5 +59,5 @@ export class EventoService {
 
   //     evento.asistentes.push(asistente)
   //   }
-  // }
+  // }x
 }

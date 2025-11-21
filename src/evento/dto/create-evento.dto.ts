@@ -14,7 +14,7 @@ export class CreateEventoDto {
 
     @IsNotEmpty()
     @IsPositive()
-    durcionHoras: number;
+    duracionHoras: number;
 
     @IsNotEmpty()
     @IsIn(['Propuesto', 'Aprobado', 'Rechazado'])

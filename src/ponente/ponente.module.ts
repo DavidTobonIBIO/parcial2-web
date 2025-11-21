@@ -1,10 +1,11 @@
-import { Injectable, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PonenteService } from './ponente.service';
 import { PonenteController } from './ponente.controller';
 import { PonenteEntity } from './entities/ponente.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [Injectable(PonenteEntity)],
+  imports: [TypeOrmModule.forFeature([PonenteEntity])],
   controllers: [PonenteController],
   providers: [PonenteService],
 })
