@@ -4,6 +4,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PonenteModule } from './ponente/ponente.module';
+import { AuditorioModule } from './auditorio/auditorio.module';
+import { AsistenteModule } from './asistente/asistente.module';
+import { EventoModule } from './evento/evento.module';
 
 
 @Module({
@@ -20,7 +24,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true,
       dropSchema: true,
       ssl: process.env.STAGE==='prod'?true: false,
-    })
+    }),
+    PonenteModule,
+    AuditorioModule,
+    AsistenteModule,
+    EventoModule
   ],
   controllers: [AppController],
   providers: [AppService],
