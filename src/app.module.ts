@@ -18,6 +18,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password: process.env.DB_PASSWORD,
       autoLoadEntities: true,
       synchronize: true,
+      dropSchema: true,
       ssl: process.env.STAGE==='prod'?true: false,
     })
   ],
