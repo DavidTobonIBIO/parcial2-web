@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePonenteDto } from './dto/create-ponente.dto';
 import { PonenteEntity } from './entities/ponente.entity';
