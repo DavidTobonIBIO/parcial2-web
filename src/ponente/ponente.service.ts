@@ -16,6 +16,8 @@ export class PonenteService {
       await this.ponenteRepository.save(createPonenteDto);
     } else if (createPonenteDto.tipoPonente === "Invitado") {
       await this.ponenteRepository.save(createPonenteDto);
+    } else {
+      throw new ForbiddenException("No se pudo crear el ponente")
     }
   }
 
