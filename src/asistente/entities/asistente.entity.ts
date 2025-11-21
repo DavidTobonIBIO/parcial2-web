@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { EventoEntity } from "src/evento/entities/evento.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class AsistenteEntity {
@@ -13,5 +14,8 @@ export class AsistenteEntity {
 
     @Column()
     email: string;
+
+    @ManyToOne(() => EventoEntity, evento => evento.asistentes)
+    evento: EventoEntity;
     
 }

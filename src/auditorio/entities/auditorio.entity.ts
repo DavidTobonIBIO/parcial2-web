@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { EventoEntity } from "src/evento/entities/evento.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class AuditorioEntity {
@@ -14,4 +15,6 @@ export class AuditorioEntity {
     @Column()
     ubicacion: string;
 
+    @OneToMany(() => EventoEntity, evento => evento.auditorio)
+    eventos: EventoEntity[];
 }
